@@ -1,0 +1,120 @@
+<html>
+	<head>
+		<!-- JavaScript Includes -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="resources/third_party/chart_js/Chart.min.js"></script>
+		<script src="resources/third_party/bootstrap/js/bootstrap.min.js"></script>
+
+		
+		<!-- CSS Includes -->
+		<link rel="stylesheet" href="resources/third_party/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="resources/css/company.css">
+
+		<title>
+			Environment Monitoring Dashboard
+		</title>
+
+	</head>
+	<body>
+
+		<div class="row">
+  			<div class="col-sm-6 col-md-4">
+    			<div class="thumbnail">
+    				<div class="caption">
+    					<span class="glyphicon glyphicon glyphicon-fire" aria-hidden="true"></span>
+    					<h2 style="display: inline-block;"> <small>Temperature</small> </h2>
+    					
+    					</br>
+    					<h2 style="display: inline">40 degrees</h2> 
+
+    					<p>
+    						<canvas id="temperature_chart"></canvas>
+    					</p>
+        			</div>
+    			</div>
+  			</div>
+
+  			<div class="col-sm-6 col-md-4">
+    			<div class="thumbnail">
+    				<div class="caption">
+    					<span class="glyphicon glyphicon glyphicon-tint" aria-hidden="true"></span>
+    					<h2 style="display: inline-block;"> <small>Humidity</small> </h2>
+    					
+    					</br>
+    					<h2 style="display: inline">30% humidity</h2> 
+
+    					<p>
+    						<canvas id="humidity_chart"></canvas>
+    					</p>
+    				</div>
+    			</div>
+  			</div>
+		</div>
+
+		<script>
+			var temperatureData = {
+			    labels: ["10:35", "10:40", "10:45", "10:50", "10:55", "11:00"],
+			    datasets: [
+			        {
+			            label: "My First dataset",
+			            fillColor: "rgba(247,0,0,0.2)",
+			            strokeColor: "rgba(220,220,220,1)",
+			            pointColor: "rgba(220,220,220,1)",
+			            pointStrokeColor: "#fff",
+			            pointHighlightFill: "#fff",
+			            pointHighlightStroke: "rgba(220,220,220,1)",
+			            min: 10,
+			            max: 100,
+			            data: [39.5, 41, 42, 43, 42, 40]
+			        }
+			    ]
+			};
+
+			var humidityData = {
+			    labels: ["10:35", "10:40", "10:45", "10:50", "10:55", "11:00"],
+			    datasets: [
+			        {
+			            label: "My First dataset",
+			            fillColor: "rgba(23,247,0,0.2)",
+			            strokeColor: "rgba(220,220,220,1)",
+			            pointColor: "rgba(220,220,220,1)",
+			            pointStrokeColor: "#fff",
+			            pointHighlightFill: "#fff",
+			            pointHighlightStroke: "rgba(220,220,220,1)",
+			            min: 10,
+			            max: 100,
+			            data: [27, 27, 28, 29, 29, 30]
+			        }
+			    ]
+			};
+
+
+
+			$(document).ready(function(){
+				var temperateCtx = document.getElementById("temperature_chart").getContext("2d"); // Create context
+				// Create chart with options
+				new Chart(temperateCtx).Line(temperatureData, {
+				        scaleOverride : false,
+				        scaleSteps : 1,
+				        scaleStepWidth : 100,
+				        scaleStartValue : 0,
+				        showScale: false,
+				        pointDot: false
+				    });
+
+				var humidityCtx = document.getElementById("humidity_chart").getContext("2d"); // Create context
+				// Create chart with options
+				new Chart(humidityCtx).Line(humidityData, {
+				        scaleOverride : false,
+				        scaleSteps : 1,
+				        scaleStepWidth : 100,
+				        scaleStartValue : 0,
+				        showScale: false,
+				        pointDot: false
+				    });
+			});
+		</script>
+
+
+	</body>
+</html>
