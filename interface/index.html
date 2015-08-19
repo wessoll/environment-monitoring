@@ -44,7 +44,7 @@
                     <h2 style="display: inline" id="header-temperature">No results</h2>
 
                     <p>
-                        <canvas id="temperature_chart"></canvas>
+                        <canvas id="temperature_chart" style="display: none"></canvas>
                     </p>
                     
                     <small id="last-refresh-temperature" style="display: none"></small>
@@ -63,7 +63,7 @@
                     <h2 style="display: inline" id="header-humidity">No results</h2>
 
                     <p>
-                        <canvas id="humidity_chart"></canvas>
+                        <canvas id="humidity_chart" style="display: none"></canvas>
                     </p>
 
                     <small id="last-refresh-humidity" style="display: none"></small>
@@ -82,7 +82,7 @@
                     <h2 style="display: inline" id="header-co">No results</h2>
 
                     <p>
-                        <canvas id="co_chart"></canvas>
+                        <canvas id="co_chart" style="display: none"></canvas>
                     </p>
 
                     <small id="last-refresh-co" style="display: none"></small>
@@ -103,7 +103,7 @@
                     <h2 style="display: inline" id="header-light">No results</h2>
 
                     <p>
-                        <canvas id="light_chart"></canvas>
+                        <canvas id="light_chart" style="display: none"></canvas>
                     </p>
 
                     <small id="last-refresh-light" style="display: none"></small>
@@ -211,6 +211,9 @@ function processTemperature(result)
         // There is not enough data to display. Return.
         $("#header-temperature").html("No results");
         $("#last-refresh-temperature").hide();
+        $("#temperature_chart").hide();
+        $("#alert-warning-temperature").hide();
+        $("#alert-danger-temperature").hide();
 
         return;
     }
@@ -279,6 +282,8 @@ function processTemperature(result)
     var scaleSteps = (maxValue - minValue) + 2.0;
     var scaleStartValue = minValue - 2.0;
 
+    $("#temperature_chart").show();
+    
     // Get the actual reference to the graph and draw it
     var temperatureCtx = document.getElementById("temperature_chart").getContext("2d"); // Create context
         new Chart(temperatureCtx).Line(temperatureData, {
@@ -300,6 +305,9 @@ function processHumidity(result)
         // There is not enough data to display. Return.
         $("#header-humidity").html("No results");
         $("#last-refresh-humidity").hide();
+        $("#humidity_chart").hide();
+        $("#alert-warning-humidity").hide();
+        $("#alert-danger-humidity").hide();
 
         return;
     }
@@ -368,6 +376,8 @@ function processHumidity(result)
     var scaleSteps = (maxValue - minValue) + 2.0;
     var scaleStartValue = minValue - 2.0;
 
+    $("#humidity_chart").show();
+
     // Get the actual reference to the graph and draw it
     var humidityCtx = document.getElementById("humidity_chart").getContext("2d"); // Create context
         new Chart(humidityCtx).Line(temperatureData, {
@@ -389,6 +399,9 @@ function processCo(result)
         // There is not enough data to display. Return.
         $("#header-co").html("No results");
         $("#last-refresh-co").hide();
+        $("#co_chart").hide();
+        $("#alert-warning-co").hide();
+        $("#alert-danger-co").hide();
 
         return;
     }
@@ -455,6 +468,8 @@ function processCo(result)
     var scaleSteps = (maxValue - minValue) + 2.0;
     var scaleStartValue = minValue - 2.0;
 
+    $("#co_chart").show();
+
     // Get the actual reference to the graph and draw it
     var coCtx = document.getElementById("co_chart").getContext("2d"); // Create context
         new Chart(coCtx).Line(coData, {
@@ -476,6 +491,7 @@ function processLight(result)
         // There is not enough data to display. Return.
         $("#header-light").html("No results");
         $("#last-refresh-light").hide();
+        $("#light_chart").hide();
 
         return;
     }
@@ -522,6 +538,8 @@ function processLight(result)
     var minValue = Math.min.apply(Math, data);
     var scaleSteps = (maxValue - minValue) + 2.0;
     var scaleStartValue = minValue - 2.0;
+
+    $("#light_chart").show();
 
     // Get the actual reference to the graph and draw it
     var lightCtx = document.getElementById("light_chart").getContext("2d"); // Create context
