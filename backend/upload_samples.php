@@ -1,7 +1,11 @@
 <?php
 
 define("DATABASE_PATH", "/var/www/phpliteadmin/public/environment-monitoring");
+define("MIN_VALUE_LIGHT", 0);
+define("MAX_VALUE_LIGHT", 1023);
+
 $allowedSensorTypes = array("temperature", "humidity", "co", "light");
+
 
 // Validation
 if (empty($_FILES) || empty($_GET["type"]) || empty($_GET["millisecond"])) {
@@ -64,8 +68,14 @@ foreach ($csv as $entry) {
 	$sampleTime = clone $startTime;
 	$sampleTime->modify("-$seconds second");
 
+	$value = $entry[0];
+
+	if ($type == "light") { // For the light sensor we want to create an percentage from the values.
+		$value = round((100/MAX_VALUE_LIGHT) * $value, 0);
+	}
+
 	// We use the the time right now as the timestamp, because the Arduino can't send the proper timestamps along
-	insert_into_db($type, $entry[0], $entry[1], $sampleTime->format("Y-m-d H:i:s"));
+	insert_into_db($type, $value, $entry[1], $sampleTime->format("Y-m-d H:i:s"));
 
 	error_log("insert into db");
 }

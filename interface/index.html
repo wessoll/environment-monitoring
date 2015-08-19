@@ -12,7 +12,6 @@
 
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta http-equiv="refresh" content="60" > <!-- refresh every x seconds -->
 
         <title>
             Environment Monitoring Dashboard
@@ -39,6 +38,7 @@
                     <div class="caption">
                         <span class="glyphicon glyphicon glyphicon-fire" aria-hidden="true"></span>
                         <h2 style="display: inline-block;"> <small>Temperature</small> </h2>
+                        <img id="spinner-temperature" src="resources/images/spinner.gif" style="width: 18px; height: 21px"> </img>
 
                     </br>
                     <h2 style="display: inline" id="header-temperature">No results</h2>
@@ -46,7 +46,7 @@
                     <p>
                         <canvas id="temperature_chart"></canvas>
                     </p>
-
+                    
                     <small id="last-refresh-temperature" style="display: none"></small>
                     </div>
                 </div>
@@ -57,6 +57,7 @@
                     <div class="caption">
                         <span class="glyphicon glyphicon glyphicon-tint" aria-hidden="true"></span>
                         <h2 style="display: inline-block;"> <small>Humidity</small> </h2>
+                        <img id="spinner-humidity" src="resources/images/spinner.gif" style="width: 18px; height: 21px"> </img>
 
                     </br>
                     <h2 style="display: inline" id="header-humidity">No results</h2>
@@ -75,6 +76,7 @@
                     <div class="caption">
                         <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
                         <h2 style="display: inline-block;"> <small>Carbon Monoxide</small> </h2>
+                        <img id="spinner-co" src="resources/images/spinner.gif" style="width: 18px; height: 21px"> </img>
 
                     </br>
                     <h2 style="display: inline" id="header-co">No results</h2>
@@ -95,6 +97,7 @@
                     <div class="caption">
                         <span class="glyphicon glyphicon glyphicon-lamp" aria-hidden="true"></span>
                         <h2 style="display: inline-block;"> <small>Light</small> </h2>
+                        <img id="spinner-light" src="resources/images/spinner.gif" style="width: 18px; height: 21px"> </img>
 
                     </br>
                     <h2 style="display: inline" id="header-light">No results</h2>
@@ -124,11 +127,25 @@ var CATEGORY_HIGH = 3;
 var CATEGORY_LOW = 4;
 var CATEGORY_OK = 5;
 
-// Start updating the graphs
-updateGraphic("humidity");
-updateGraphic("temperature");
-updateGraphic("co");
-updateGraphic("light");
+var REFRESH_INTERVAL = 60000; // 60 seconds
+
+// Start refreshing the data every 60 seconds, without refreshing the page itself
+setInterval(function () {
+    // Start updating the graphs
+    updateAll();
+}, REFRESH_INTERVAL);
+
+// Update graphs on page load
+updateAll();
+
+// Updates all graphs and notifications
+function updateAll()
+{
+    updateGraphic("humidity");
+    updateGraphic("temperature");
+    updateGraphic("co");
+    updateGraphic("light");
+}
 
 // Retrieves the data and calls the necessary method to update the graphic for the specified type.
 function updateGraphic(type)
@@ -138,8 +155,11 @@ function updateGraphic(type)
     // Construct the URL to retrieve the humidity data
     var url = apiURL + "?interval=300&limit=5&type=" + type;
 
+    showSpinner(type, true); // Show the user we are loading data
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            showSpinner(type, false); // We can hide the spinner again
+
             // Check if we have a response
             if (!xmlhttp.responseText) {
                 console.log("something went wrong");
@@ -172,6 +192,16 @@ function updateGraphic(type)
     }
     xmlhttp.open("GET", url, true);
     xmlhttp.send();
+}
+
+// Show an spinner for the specific sensor type as indication the data is being loaded
+function showSpinner(type, isBusy)
+{
+    if (isBusy) {
+        $("#spinner-" + type).show(); // Show spinner
+    } else {
+        $("#spinner-" + type).hide(); // Hide spinner.
+    }
 }
 
 // Processes the API result for the temperature and reflects in the UI
@@ -465,7 +495,7 @@ function processLight(result)
     var latestValue = data[data.length - 1]; // The most recent value
     var latestTimestamp = labels[labels.length - 1]; // The most recent timestamp
 
-    $("#header-light").html(latestValue + " points"); // Update title
+    $("#header-light").html(latestValue + " percent"); // Update title
     $("#last-refresh-light").html("Last refreshed " + moment(latestTimestamp, "YYYY-MM-DD HH:mm:ss").add(2, "hours").fromNow()); // Update title
 
     $("#last-refresh-light").show();
