@@ -1,7 +1,7 @@
     <html>
     <head>
         <!-- JavaScript Includes -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="resources/third_party/jquery/jquery-1.11.3.min.js"></script>
         <script src="resources/third_party/chart_js/Chart.min.js"></script>
         <script src="resources/third_party/bootstrap/js/bootstrap.min.js"></script>
         <script src="resources/third_party/moment_js/moment.js"></script>
@@ -283,7 +283,7 @@ function processTemperature(result)
     var scaleStartValue = minValue - 2.0;
 
     $("#temperature_chart").show();
-    
+
     // Get the actual reference to the graph and draw it
     var temperatureCtx = document.getElementById("temperature_chart").getContext("2d"); // Create context
         new Chart(temperatureCtx).Line(temperatureData, {
